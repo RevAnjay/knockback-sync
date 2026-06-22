@@ -29,7 +29,7 @@ public class PlayerUtil {
 
         double totalDelayTicks = ticksUntilMaxHeight + ticksToGround;
 
-        long estimatedPing = player.getPing();
+        int estimatedPing = player.getPing();
         int pingOffset = KnockbackSync.getInstance().getConfig().getInt("ping_offset");
         if (estimatedPing > pingOffset)
             estimatedPing -= pingOffset;
