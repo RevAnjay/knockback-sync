@@ -1,55 +1,35 @@
 package me.caseload.knockbacksync;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
-import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import me.caseload.knockbacksync.command.MainCommand;
-import me.caseload.knockbacksync.listener.PacketReceiveListener;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import me.caseload.knockbacksync.command.RootCommand;
 import me.caseload.knockbacksync.listener.PlayerDamageListener;
 import me.caseload.knockbacksync.listener.PlayerVelocityListener;
 import me.caseload.knockbacksync.listener.QuitListener;
-import me.caseload.knockbacksync.runnable.PingRunnable;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class KnockbackSync extends JavaPlugin {
+import java.util.List;
 
-    @Override
-    public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIBukkitConfig(this));
-        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-        PacketEvents.getAPI().load();
-    }
+public final class KnockbackSync extends JavaPlugin {
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-
-        CommandAPI.onEnable();
-        new MainCommand().register();
 
         registerListeners(
                 new PlayerDamageListener(),
                 new PlayerVelocityListener(),
                 new QuitListener()
         );
+        registerCommands();
 
-        PacketEvents.getAPI().getEventManager().registerListener(
-                new PacketReceiveListener(), PacketListenerPriority.NORMAL
-        );
-
-        PacketEvents.getAPI().init();
-
-        new PingRunnable().runTaskTimerAsynchronously(this, 15, 15);
+        this.getLogger().info("KnockbackSync has been successfully enabled.");
     }
 
     @Override
     public void onDisable() {
-        CommandAPI.onDisable();
-        PacketEvents.getAPI().terminate();
+        this.getLogger().info("KnockbackSync has been disabled.");
     }
 
     public static KnockbackSync getInstance() {
@@ -60,6 +40,12 @@ public final class KnockbackSync extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         for (Listener listener : listeners)
             pluginManager.registerEvents(listener, this);
+    }
+
+    private void registerCommands() {
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> event.registrar().register(RootCommand.createCommand("knockbacksync", this), "KnockbackSync Command",
+                List.of("kbsync")
+        ));
     }
 
 }

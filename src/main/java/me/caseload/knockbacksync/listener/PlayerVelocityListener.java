@@ -2,7 +2,6 @@ package me.caseload.knockbacksync.listener;
 
 import me.caseload.knockbacksync.KnockbackSync;
 import me.caseload.knockbacksync.manager.KnockbackManager;
-import me.caseload.knockbacksync.manager.PingManager;
 import me.caseload.knockbacksync.util.MathUtil;
 import me.caseload.knockbacksync.util.PlayerUtil;
 import org.bukkit.entity.Entity;
@@ -15,7 +14,6 @@ import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class PlayerVelocityListener implements Listener {
 
@@ -47,7 +45,10 @@ public class PlayerVelocityListener implements Listener {
         if (PlayerUtil.predictiveOnGround(victim, knockback.getY())) {
             handleOnGround(victim, knockback, modifiedYAxis.get());
         } else if (KnockbackSync.getInstance().getConfig().getBoolean("toggle_offground")) {
-            long ping = PingManager.getPingMap().getOrDefault(victim.getUniqueId(), (long) victim.getPing());
+            long ping = victim.getPing();
+            int pingOffset = KnockbackSync.getInstance().getConfig().getInt("ping_offset");
+            if (ping > pingOffset)
+                ping -= pingOffset;
             handleOffGround(victim, knockback, (int) ping);
         }
     }

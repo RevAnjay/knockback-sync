@@ -1,0 +1,7 @@
+name: KnockbackSync
+version: '1.2.3'
+main: me.caseload.knockbacksync.KnockbackSync
+api-version: '1.21'
+authors: [ Caseload, Valed Development Team, RevAnjay ]
+description: Developed by Valed Development Team, RevAnjay, a fork of the knockback-sync plugin by CASELOAD7000.
+folia-supported: true

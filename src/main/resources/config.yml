@@ -1,11 +1,11 @@
 enabled: true
 toggle_offground: true
-ping_offset: 25
+ping_offset: 0
 max_damage_age_milliseconds: 500
 
-enable_message: "&aSuccessfully enabled ValedKnockbackSync."
-offground_enable_message: "&aSuccessfully enabled ValedKnockbackSync offground."
-disable_message: "&cSuccessfully disabled ValedKnockbackSync."
-offground_disable_message: "&cSuccessfully disabled ValedKnockbackSync offground."
-configure_offset_message: "&aSuccessfully configured the ping offset."
-configure_max_damage_age_message: "&aSuccessfully configured the maximum damage age."
+enable_message: "<green>Successfully enabled KnockbackSync."
+offground_enable_message: "<green>Successfully enabled KnockbackSync offground."
+disable_message: "<red>Successfully disabled KnockbackSync."
+offground_disable_message: "<red>Successfully disabled KnockbackSync offground."
+configure_offset_message: "<green>Successfully configured the ping offset."
+configure_max_damage_age_message: "<green>Successfully configured the maximum damage age."

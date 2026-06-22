@@ -1,7 +1,6 @@
 package me.caseload.knockbacksync.util;
 
 import me.caseload.knockbacksync.KnockbackSync;
-import me.caseload.knockbacksync.manager.PingManager;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +29,7 @@ public class PlayerUtil {
 
         double totalDelayTicks = ticksUntilMaxHeight + ticksToGround;
 
-        long estimatedPing = PingManager.getPingMap().getOrDefault(player.getUniqueId(), (long) player.getPing());
+        long estimatedPing = player.getPing();
         int pingOffset = KnockbackSync.getInstance().getConfig().getInt("ping_offset");
         if (estimatedPing > pingOffset)
             estimatedPing -= pingOffset;
