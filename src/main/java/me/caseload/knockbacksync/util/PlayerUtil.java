@@ -7,11 +7,28 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 public class PlayerUtil {
+
+    private static final Attribute KNOCKBACK_RESISTANCE_ATTR;
+
+    static {
+        Attribute attr;
+        try {
+            attr = Attribute.valueOf("KNOCKBACK_RESISTANCE");
+        } catch (IllegalArgumentException e) {
+            attr = null;
+            try {
+                attr = Attribute.valueOf("GENERIC_KNOCKBACK_RESISTANCE");
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+        KNOCKBACK_RESISTANCE_ATTR = attr;
+    }
 
     public static boolean predictiveOnGround(Player player, double verticalVelocity) {
         Material material = player.getLocation().getBlock().getType();
@@ -42,7 +59,7 @@ public class PlayerUtil {
 
         if (!attacker.isSprinting()) {
             yAxis = 0.36080000519752503;
-            double knockbackResistance = victim.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getValue();
+            double knockbackResistance = KNOCKBACK_RESISTANCE_ATTR != null ? victim.getAttribute(KNOCKBACK_RESISTANCE_ATTR).getValue() : 0.0;
             double resistanceFactor = 0.04000000119 * knockbackResistance * 10;
             yAxis -= resistanceFactor;
         }
