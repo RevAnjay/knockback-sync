@@ -5,7 +5,10 @@ import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
 import org.bukkit.util.BoundingBox;
@@ -17,14 +20,21 @@ public class PlayerUtil {
     private static final Attribute KNOCKBACK_RESISTANCE_ATTR;
 
     static {
-        Attribute attr;
+        Attribute attr = null;
         try {
-            attr = Attribute.valueOf("KNOCKBACK_RESISTANCE");
-        } catch (IllegalArgumentException e) {
-            attr = null;
+            attr = Registry.ATTRIBUTE.get(NamespacedKey.minecraft("generic.knockback_resistance"));
+        } catch (Throwable ignored) {
+        }
+        if (attr == null) {
             try {
                 attr = Attribute.valueOf("GENERIC_KNOCKBACK_RESISTANCE");
-            } catch (IllegalArgumentException ignored) {
+            } catch (Throwable ignored) {
+            }
+        }
+        if (attr == null) {
+            try {
+                attr = Attribute.valueOf("KNOCKBACK_RESISTANCE");
+            } catch (Throwable ignored) {
             }
         }
         KNOCKBACK_RESISTANCE_ATTR = attr;
@@ -59,7 +69,13 @@ public class PlayerUtil {
 
         if (!attacker.isSprinting()) {
             yAxis = 0.36080000519752503;
-            double knockbackResistance = KNOCKBACK_RESISTANCE_ATTR != null ? victim.getAttribute(KNOCKBACK_RESISTANCE_ATTR).getValue() : 0.0;
+            double knockbackResistance = 0.0;
+            if (KNOCKBACK_RESISTANCE_ATTR != null) {
+                AttributeInstance instance = victim.getAttribute(KNOCKBACK_RESISTANCE_ATTR);
+                if (instance != null) {
+                    knockbackResistance = instance.getValue();
+                }
+            }
             double resistanceFactor = 0.04000000119 * knockbackResistance * 10;
             yAxis -= resistanceFactor;
         }
